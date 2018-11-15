@@ -35,8 +35,8 @@
         android:hint="Nombre completo"
         android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/nombreusuarregist"
+    <TextView
+        android:id="@+id/carnet"
         android:layout_width="210dp"
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
@@ -44,7 +44,7 @@
         android:layout_marginTop="185dp"
         android:background="#11000000"
         android:ems="10"
-        android:hint="Número de carné"
+        android:hint="Número de carné (scanner)"
         android:inputType="textPersonName" />
 
     <EditText
