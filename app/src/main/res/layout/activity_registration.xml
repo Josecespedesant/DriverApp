@@ -44,7 +44,7 @@
         android:layout_marginTop="185dp"
         android:background="#11000000"
         android:ems="10"
-        android:hint="Nombre de usuario"
+        android:hint="Número de carné"
         android:inputType="textPersonName" />
 
     <EditText
@@ -102,5 +102,15 @@
         android:layout_marginBottom="114dp"
         android:text="iniciar sesión"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contrasregistr"
+        android:layout_alignEnd="@+id/imageView7"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="20dp"
+        android:text="Ubicación" />
 
 </RelativeLayout>
