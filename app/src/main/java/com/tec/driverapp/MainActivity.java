@@ -16,10 +16,16 @@
         import android.widget.RelativeLayout;
         import android.widget.TextView;
 
+        import com.linkedin.platform.APIHelper;
         import com.linkedin.platform.LISessionManager;
+        import com.linkedin.platform.errors.LIApiError;
         import com.linkedin.platform.errors.LIAuthError;
+        import com.linkedin.platform.listeners.ApiListener;
+        import com.linkedin.platform.listeners.ApiResponse;
         import com.linkedin.platform.listeners.AuthListener;
         import com.linkedin.platform.utils.Scope;
+
+        import org.json.JSONObject;
 
         import java.security.MessageDigest;
         import java.security.NoSuchAlgorithmException;
@@ -27,6 +33,10 @@
 
         public class MainActivity extends AppCompatActivity {
             private static final String TAG = "MainActivity";
+            static TextView carnet;
+            static TextView registrate;
+
+            String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +59,9 @@
                     Log.d(TAG, e.getMessage(), e);
                 }
 
-                final TextView carnet = (TextView) findViewById(R.id.carnet);
+                carnet = (TextView) findViewById(R.id.carnet);
                 final EditText contraseñalogin = (EditText) findViewById(R.id.passwordlogin);
-                final TextView registrate = (TextView) findViewById(R.id.registratetext);
+                registrate = (TextView) findViewById(R.id.registrate);
                 final ImageView linkedin = (ImageView) findViewById(R.id.linkedimg);
                 final RelativeLayout iniciarsesion = (RelativeLayout) findViewById(R.id.iniciarsesion);
 
@@ -67,14 +77,15 @@
                     @Override
                     public void onClick(View v) {
                         login(v);
+
                     }
                 });
 
                 registrate.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Intent registerIntent = new Intent(MainActivity.this, RegistrationActivity.class);
-                        MainActivity.this.startActivity(registerIntent);
+                    public void onClick(View view) {
+                        Intent registration = new Intent(MainActivity.this, RegistrationActivity.class);
+                        startActivity(registration);
                     }
                 });
 
@@ -91,9 +102,10 @@
                 LISessionManager.getInstance(getApplicationContext()).init(this, buildScope(), new AuthListener() {
                     @Override
                     public void onAuthSuccess() {
-                        Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-                        intent.putExtra("valor", LISessionManager.getInstance(getApplicationContext()).getSession().getAccessToken().toString());
-                        startActivity(intent);
+                        linkedinHelperApi();
+                        Intent intent = new Intent(MainActivity.this, BarcodeScanner.class);
+                      // intent.putExtra("valor", LISessionManager.getInstance(getApplicationContext()).getSession().getAccessToken().toString());
+                        startActivityForResult(intent, 1);
                     }
 
                     @Override
@@ -108,6 +120,50 @@
 
             @Override
             protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                if(requestCode == 1){
+                    if(resultCode == RESULT_OK){
+                        String resultado = data.getStringExtra("resultado");
+                        final TextView iniciosesion = (TextView) findViewById(R.id.iniciosesion);
+                        iniciosesion.setText(resultado);
+                    }
+                }
+
                 LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
             }
+
+            public void linkedinHelperApi(){
+                APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+                apiHelper.getRequest(MainActivity.this, url, new ApiListener() {
+                    @Override
+                    public void onApiSuccess(ApiResponse apiResponse) {
+                        finalResult(apiResponse.getResponseDataAsJson());
+                    }
+
+                    @Override
+                    public void onApiError(LIApiError LIApiError) {
+
+                    }
+                });
+            }
+
+            public void finalResult(JSONObject jsonObject){
+                try{
+                    //extView nombre = (TextView) findViewById(R.id.nombre);
+                    carnet.setText("Nombre:   " + jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName").toString()); //aqui se agarra el nombre y se pone en la variable nombre XDDDDDDDD
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+           /* @Override
+            protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                if(requestCode == 1){
+                    if(resultCode == RESULT_OK){
+                        String resultado = data.getStringExtra("resultado");
+                        carnet.setText(resultado);
+                    }
+                }
+            }*/
         }

@@ -23,7 +23,7 @@
         android:layout_marginRight="110dp"
         app:srcCompat="@drawable/car" />
 
-    <TextView
+    <EditText
         android:id="@+id/nombre"
         android:layout_width="210dp"
         android:layout_height="20dp"
@@ -32,6 +32,7 @@
         android:layout_marginTop="128dp"
         android:background="#11000000"
         android:ems="10"
+        android:hint="Nombre"
         android:inputType="textPersonName" />
 
     <TextView

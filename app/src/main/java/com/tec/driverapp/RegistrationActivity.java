@@ -20,9 +20,6 @@ public class RegistrationActivity extends AppCompatActivity {
     TextView carnet;
     TextView nombre;
 
-    String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,14 +56,14 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        Bundle bundle = getIntent().getExtras();
+        /*Bundle bundle = getIntent().getExtras();
         String getokn = bundle.getString("valor");
         carnet.setText(getokn);
 
-        linkedinHelperApi();
+        linkedinHelperApi();*/
 
     }
-
+/*
     public void linkedinHelperApi(){
         APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
         apiHelper.getRequest(RegistrationActivity.this, url, new ApiListener() {
@@ -100,5 +97,5 @@ public class RegistrationActivity extends AppCompatActivity {
                 carnet.setText(resultado);
             }
         }
-    }
+    }*/
 }

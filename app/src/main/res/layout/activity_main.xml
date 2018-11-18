@@ -95,7 +95,7 @@
         android:text="¿No tienes una cuenta?" />
 
     <TextView
-        android:id="@+id/registratetext"
+        android:id="@+id/registrate"
         android:layout_width="81dp"
         android:layout_height="22dp"
         android:layout_alignParentBottom="true"
@@ -120,7 +120,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/iniciosesion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
