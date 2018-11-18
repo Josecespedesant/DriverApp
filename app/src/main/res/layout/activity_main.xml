@@ -42,26 +42,25 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/nombreusuariologin"
-        android:layout_width="210dp"
+    <TextView
+        android:id="@+id/carnet"
+        android:layout_width="193dp"
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="178dp"
         android:background="#11000000"
         android:ems="10"
-        android:hint="Número de carné"
+        android:hint="Numero carne (scanner)"
         android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/passwordlogin"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_alignEnd="@+id/nombreusuariologin"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="230dp"
-        android:layout_marginEnd="1dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="236dp"
         android:background="#11000000"
         android:ems="10"
         android:hint="Contraseña"
