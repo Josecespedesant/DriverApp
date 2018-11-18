@@ -55,7 +55,13 @@
                 final ImageView linkedin = (ImageView) findViewById(R.id.linkedimg);
                 final RelativeLayout iniciarsesion = (RelativeLayout) findViewById(R.id.iniciarsesion);
 
-
+                iniciarsesion.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
+                        MainActivity.this.startActivity(mapintent);
+                    }
+                });
 
                 linkedin.setOnClickListener(new View.OnClickListener() {
                     @Override
