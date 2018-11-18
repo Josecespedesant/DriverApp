@@ -26,28 +26,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try {
 
-            @SuppressLint("PackageManagerGetSignatures") PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.tec.driverapp",//give your package name here
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-
-                Log.d(TAG, "Hash ASLKJDNKJHNLASDOHASHIPDASDPOHIJASDPHO : " + Base64.encodeToString(md.digest(), Base64.NO_WRAP));//Key hash is printing in Log
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, e.getMessage(), e);
-        } catch (NoSuchAlgorithmException e) {
-            Log.d(TAG, e.getMessage(), e);
-        }
 
         final EditText nombreusuariologin = (EditText) findViewById(R.id.nombreusuariologin);
         final EditText contraseñalogin = (EditText) findViewById(R.id.passwordlogin);
         final TextView registrate = (TextView) findViewById(R.id.registratetext);
         final ImageView linkedin = (ImageView) findViewById(R.id.linkedimg);
         final RelativeLayout iniciarsesion = (RelativeLayout) findViewById(R.id.iniciarsesion);
+
+
+        iniciarsesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapdisplay = new Intent(MainActivity.this, DriverMapActivity.class);
+                MainActivity.this.startActivity(mapdisplay);
+            }
+        });
 
         registrate.setOnClickListener(new View.OnClickListener() {
             @Override

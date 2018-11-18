@@ -19,7 +19,17 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         final TextView volverainiciar = (TextView) findViewById(R.id.volverainiciarsesion);
+        final Button ubicar = (Button) findViewById(R.id.location);
         carnet = (TextView) findViewById(R.id.carnet);
+
+        ubicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ubintent = new Intent(RegistrationActivity.this, MapActivity.class);
+                startActivityForResult(ubintent, 2);
+                //startActivityForResult(ubicintent, 1);
+            }
+        });
 
         carnet.setOnClickListener(new View.OnClickListener() {
             @Override
