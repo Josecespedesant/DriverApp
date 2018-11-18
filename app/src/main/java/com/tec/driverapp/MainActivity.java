@@ -32,22 +32,6 @@
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
-                try {
-
-                    @SuppressLint("PackageManagerGetSignatures") PackageInfo info = getPackageManager().getPackageInfo(
-                            "com.tec.driverapp",//give your package name here
-                            PackageManager.GET_SIGNATURES);
-                    for (Signature signature : info.signatures) {
-                        MessageDigest md = MessageDigest.getInstance("SHA");
-                        md.update(signature.toByteArray());
-
-                        Log.d(TAG, "Hash ASLKJDNKJHNLASDOHASHIPDASDPOHIJASDPHO : " + Base64.encodeToString(md.digest(), Base64.NO_WRAP));//Key hash is printing in Log
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    Log.d(TAG, e.getMessage(), e);
-                } catch (NoSuchAlgorithmException e) {
-                    Log.d(TAG, e.getMessage(), e);
-                }
 
                 final TextView carnet = (TextView) findViewById(R.id.carnet);
                 final EditText contraseñalogin = (EditText) findViewById(R.id.passwordlogin);
@@ -73,8 +57,8 @@
                 registrate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent registerIntent = new Intent(MainActivity.this, RegistrationActivity.class);
-                        MainActivity.this.startActivity(registerIntent);
+                        Intent rintent = new Intent(MainActivity.this, RegistrationActivity.class);
+                        MainActivity.this.startActivity(rintent);
                     }
                 });
 

@@ -23,8 +23,8 @@
         android:layout_marginRight="110dp"
         app:srcCompat="@drawable/car" />
 
-    <TextView
-        android:id="@+id/nombre"
+    <EditText
+        android:id="@+id/nombrec"
         android:layout_width="210dp"
         android:layout_height="20dp"
         android:layout_alignParentTop="true"
@@ -32,7 +32,8 @@
         android:layout_marginTop="128dp"
         android:background="#11000000"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:hint="Nombre completo" />
 
     <TextView
         android:id="@+id/carnet"
@@ -50,7 +51,7 @@
         android:id="@+id/contrasregistr"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_alignStart="@+id/nombre"
+        android:layout_alignStart="@+id/nombrec"
         android:layout_alignParentTop="true"
         android:layout_marginStart="1dp"
         android:layout_marginTop="242dp"

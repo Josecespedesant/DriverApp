@@ -2,14 +2,12 @@
 
     import android.Manifest;
     import android.content.pm.PackageManager;
-    import android.graphics.Camera;
     import android.location.Location;
-    import android.location.LocationListener;
+    import android.os.Bundle;
     import android.support.annotation.NonNull;
     import android.support.annotation.Nullable;
     import android.support.v4.app.ActivityCompat;
     import android.support.v4.app.FragmentActivity;
-    import android.os.Bundle;
     import android.widget.Toast;
 
     import com.google.android.gms.common.ConnectionResult;
@@ -18,13 +16,13 @@
     import com.google.android.gms.location.LocationServices;
     import com.google.android.gms.maps.CameraUpdateFactory;
     import com.google.android.gms.maps.GoogleMap;
+    import com.google.android.gms.maps.MapView;
     import com.google.android.gms.maps.OnMapReadyCallback;
     import com.google.android.gms.maps.SupportMapFragment;
     import com.google.android.gms.maps.model.LatLng;
-    import com.google.android.gms.maps.model.MarkerOptions;
 
 
-    public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+    public class GetLocationActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
         private GoogleMap mMap;
         GoogleApiClient googleApiClient;
@@ -41,7 +39,7 @@
                     .findFragmentById(R.id.map);
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(DriverMapActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(GetLocationActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }else{
                 mapFragment.getMapAsync(this);
             }
@@ -49,6 +47,7 @@
 
         @Override
         public void onMapReady(GoogleMap googleMap) {
+
             mMap = googleMap;
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -56,6 +55,8 @@
             }
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
+
+
         }
 
         protected synchronized void buildGoogleApiClient(){
@@ -74,9 +75,6 @@
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-
-
         }
 
         @Override
@@ -87,7 +85,7 @@
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(DriverMapActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(GetLocationActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }
 
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
