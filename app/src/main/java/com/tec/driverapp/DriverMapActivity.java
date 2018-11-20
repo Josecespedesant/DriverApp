@@ -14,13 +14,17 @@
 
     import com.google.android.gms.common.ConnectionResult;
     import com.google.android.gms.common.api.GoogleApiClient;
+    import com.google.android.gms.common.api.PendingResult;
+    import com.google.android.gms.common.api.Status;
     import com.google.android.gms.location.LocationRequest;
     import com.google.android.gms.location.LocationServices;
     import com.google.android.gms.maps.CameraUpdateFactory;
     import com.google.android.gms.maps.GoogleMap;
     import com.google.android.gms.maps.OnMapReadyCallback;
     import com.google.android.gms.maps.SupportMapFragment;
+    import com.google.android.gms.maps.model.BitmapDescriptorFactory;
     import com.google.android.gms.maps.model.LatLng;
+    import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
 
 
@@ -31,7 +35,7 @@
         Location lastLocation;
         LocationRequest locationRequest;
         SupportMapFragment mapFragment;
-
+        static Marker carmarker;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -45,6 +49,8 @@
             }else{
                 mapFragment.getMapAsync(this);
             }
+
+
         }
 
         @Override
@@ -69,15 +75,20 @@
 
         @Override
         public void onLocationChanged(Location location) {
-            lastLocation = location;
-
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            lastLocation = location;
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+            if(carmarker!=null){
+                carmarker.remove();
+            }
 
+            carmarker = mMap.addMarker(new MarkerOptions().position(latLng).title("caca").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
 
         }
+
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
