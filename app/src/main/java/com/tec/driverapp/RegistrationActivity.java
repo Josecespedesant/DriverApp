@@ -19,14 +19,14 @@ import com.linkedin.platform.listeners.ApiResponse;
 import org.json.JSONObject;
 
 public class RegistrationActivity extends AppCompatActivity {
-    TextView carnet;
+    static TextView carnet;
     EditText nombre;
-    EditText pass;
+    static EditText pass;
     String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
 
     String resultcarnet;
     String resultnombre;
-    String resultpass;
+    static String resultpass;
 
 
     @Override
@@ -36,11 +36,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
         final EditText nombre = (EditText) findViewById(R.id.nombrec);
         final EditText pass = (EditText) findViewById(R.id.contrasregistr);
-
         final RelativeLayout register = (RelativeLayout) findViewById(R.id.registrarse);
-
-        final TextView volverainiciar = (TextView) findViewById(R.id.volverainiciarsesion);
         final Button ubicar = (Button) findViewById(R.id.location);
+
         carnet = (TextView) findViewById(R.id.carnet);
 
         ubicar.setOnClickListener(new View.OnClickListener() {
@@ -61,13 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 //RegistrationActivity.this.startActivity(registerIntent);
             }
         });
-        volverainiciar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent registerIntent = new Intent(RegistrationActivity.this, MainActivity.class);
-                RegistrationActivity.this.startActivity(registerIntent);
-            }
-        });
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +68,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 resultcarnet = carnet.getText().toString();
                 resultpass = pass.getText().toString();
 
-                getManualRegistrationInfo();
+                MainActivity.nombre = nombre.getText().toString();
+                MainActivity.carnet.setText(carnet.getText().toString());
+                MainActivity.contraseñalogin.setText(pass.getText().toString());
+                finish();
+               // getManualRegistrationInfo();
             }
         });
 
@@ -85,10 +81,7 @@ public class RegistrationActivity extends AppCompatActivity {
             String getokn = bundle.getString("valor");
             carnet.setText(getokn);
         }
-        linkedinHelperApi();
-
     }
-
 
 
     /*
@@ -105,30 +98,6 @@ public class RegistrationActivity extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(), "Por favor, ingrese correctamente sus datos", Toast.LENGTH_LONG).show();
             return null;
-        }
-    }
-
-    public void linkedinHelperApi(){
-        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
-        apiHelper.getRequest(RegistrationActivity.this, url, new ApiListener() {
-            @Override
-            public void onApiSuccess(ApiResponse apiResponse) {
-                finalResult(apiResponse.getResponseDataAsJson());
-            }
-
-            @Override
-            public void onApiError(LIApiError LIApiError) {
-
-            }
-        });
-    }
-
-    public void finalResult(JSONObject jsonObject){
-        try{
-            TextView nombre = (TextView) findViewById(R.id.nombrec);
-            nombre.setText("Nombre:   " + jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName").toString()); //aqui se agarra el nombre y se pone en la variable nombre XDDDDDDDD
-        }catch (Exception e){
-            e.printStackTrace();
         }
     }
 

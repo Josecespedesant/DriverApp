@@ -15,11 +15,18 @@
         import android.widget.ImageView;
         import android.widget.RelativeLayout;
         import android.widget.TextView;
+        import android.widget.Toast;
 
+        import com.linkedin.platform.APIHelper;
         import com.linkedin.platform.LISessionManager;
+        import com.linkedin.platform.errors.LIApiError;
         import com.linkedin.platform.errors.LIAuthError;
+        import com.linkedin.platform.listeners.ApiListener;
+        import com.linkedin.platform.listeners.ApiResponse;
         import com.linkedin.platform.listeners.AuthListener;
         import com.linkedin.platform.utils.Scope;
+
+        import org.json.JSONObject;
 
         import java.security.MessageDigest;
         import java.security.NoSuchAlgorithmException;
@@ -27,23 +34,34 @@
 
         public class MainActivity extends AppCompatActivity {
             private static final String TAG = "MainActivity";
+            String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
+            static TextView carnet;
+            static EditText contraseñalogin;
+            static String nombre=null;
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_main);
 
-                final TextView carnet = (TextView) findViewById(R.id.carnet);
-                final EditText contraseñalogin = (EditText) findViewById(R.id.passwordlogin);
-                final TextView registrate = (TextView) findViewById(R.id.registratetext);
+                carnet = (TextView) findViewById(R.id.carnet);
+                contraseñalogin = (EditText) findViewById(R.id.passwordlogin);
+                final TextView registrate = (TextView) findViewById(R.id.registrate);
                 final ImageView linkedin = (ImageView) findViewById(R.id.linkedimg);
                 final RelativeLayout iniciarsesion = (RelativeLayout) findViewById(R.id.iniciarsesion);
-
                 iniciarsesion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
-                        MainActivity.this.startActivity(mapintent);
+
+                        if(carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)){
+                            Toast.makeText(getApplicationContext(),"Bienvenido: " + nombre,Toast.LENGTH_SHORT).show();
+
+                            Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
+                            MainActivity.this.startActivity(mapintent);
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Carnet o contraseña invalida",Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
 
@@ -53,7 +71,6 @@
                         login(v);
                     }
                 });
-
                 registrate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -75,9 +92,9 @@
                 LISessionManager.getInstance(getApplicationContext()).init(this, buildScope(), new AuthListener() {
                     @Override
                     public void onAuthSuccess() {
-                        Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-                        intent.putExtra("valor", LISessionManager.getInstance(getApplicationContext()).getSession().getAccessToken().toString());
-                        startActivity(intent);
+                        linkedinHelperApi();
+                        Intent intent = new Intent(MainActivity.this, BarcodeScanner.class);
+                        startActivityForResult(intent, 1);
                     }
 
                     @Override
@@ -92,6 +109,41 @@
 
             @Override
             protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+                super.onActivityResult(requestCode, resultCode, data);
+                if(requestCode == 1){
+                    if(resultCode == RESULT_OK){
+                        String resultado = data.getStringExtra("resultado");
+                        carnet.setText(resultado);
+                        Toast.makeText(getApplicationContext(),"Su carnet es: "+resultado,Toast.LENGTH_SHORT).show();
+
+                        Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
+                        MainActivity.this.startActivity(mapintent);
+                    }
+                }
                 LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+            }
+
+            public void linkedinHelperApi(){
+                APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+                apiHelper.getRequest(MainActivity.this, url, new ApiListener() {
+                    @Override
+                    public void onApiSuccess(ApiResponse apiResponse) {
+                        finalResult(apiResponse.getResponseDataAsJson());
+                    }
+
+                    @Override
+                    public void onApiError(LIApiError LIApiError) {
+
+                    }
+                });
+            }
+
+            public void finalResult(JSONObject jsonObject){
+                try{
+                    Toast.makeText(getApplicationContext(),"Bienvenido "+ jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName").toString(),Toast.LENGTH_SHORT).show();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
