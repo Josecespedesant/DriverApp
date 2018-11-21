@@ -1,5 +1,6 @@
 package com.tec.driverapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.Marker;
 import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
@@ -107,6 +109,11 @@ public class RegistrationActivity extends AppCompatActivity {
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
                 String resultado = data.getStringExtra("resultado");
+                carnet.setText(resultado);
+            }
+        }else if(requestCode == 2){
+            if(resultCode == Activity.RESULT_OK){
+                String resultado = data.getStringExtra("ubicacion");
                 carnet.setText(resultado);
             }
         }

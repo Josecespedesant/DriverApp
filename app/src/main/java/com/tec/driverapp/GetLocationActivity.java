@@ -1,6 +1,8 @@
     package com.tec.driverapp;
 
     import android.Manifest;
+    import android.app.Activity;
+    import android.content.Intent;
     import android.content.pm.PackageManager;
     import android.location.Location;
     import android.os.Bundle;
@@ -20,6 +22,8 @@
     import com.google.android.gms.maps.OnMapReadyCallback;
     import com.google.android.gms.maps.SupportMapFragment;
     import com.google.android.gms.maps.model.LatLng;
+    import com.google.android.gms.maps.model.Marker;
+    import com.google.android.gms.maps.model.MarkerOptions;
 
 
     public class GetLocationActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
@@ -56,6 +60,20 @@
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
 
+
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    mMap.clear();
+                    Marker marcador = mMap.addMarker(new MarkerOptions().position(latLng));
+
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("ubicacion", marcador.getPosition());
+                    //Toast.makeText(getApplicationContext(), marcador.getPosition().toString(), Toast.LENGTH_LONG).show();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                }
+            });
 
         }
 
