@@ -15,7 +15,7 @@ import java.net.URL;
 
 public class RegistrarConductor {
 
-    private final String registrarConductorURL = "http://192.168.100.7:8080/registrar-conductor";
+    private final String registrarConductorURL = "http://192.168.100.7:8080/registro-conductor";
 
     public boolean sendRegistro(Conductor conductor) {
         Gson gson = new Gson();

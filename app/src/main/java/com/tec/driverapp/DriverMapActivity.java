@@ -97,6 +97,7 @@
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+
                         }
                         if(MainActivity.conductor!= null){
                             MainActivity.conductor.setPosLatitud(lat);
