@@ -1,36 +1,24 @@
 package com.tec.comm;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.tec.entities.Conductor;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.BufferedReader;
+import android.os.AsyncTask;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public class RegistrarConductor {
+public class RegistrarConductor extends AsyncTask<String, String, String> {
 
     private final String registrarConductorURL = "http://192.168.100.7:8080/registro-conductor";
 
+    /*
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public boolean registrarConductor(Conductor conductor) throws IOException {
         boolean registrado = false;
+
+        System.out.println("hola");
 
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(registrarConductorURL);
@@ -63,5 +51,35 @@ public class RegistrarConductor {
             }
         }
         return registrado;
+    }
+    */
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... strings) { ;
+        String json = strings[0];
+        OutputStream out = null;
+
+        try {
+            URL url = new URL(this.registrarConductorURL);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+            writer.write(json);
+            writer.flush();
+            writer.close();
+            out.close();
+
+            urlConnection.connect();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
