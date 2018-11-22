@@ -62,6 +62,10 @@
             }
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
+
+            LatLng  lalg = new LatLng(9.857191, -83.912284);
+            mMap.addMarker(new MarkerOptions().position(lalg));
+
         }
 
         protected synchronized void buildGoogleApiClient(){

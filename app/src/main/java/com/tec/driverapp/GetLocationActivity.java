@@ -68,8 +68,15 @@
                     Marker marcador = mMap.addMarker(new MarkerOptions().position(latLng));
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("ubicacion", marcador.getPosition());
-                    //Toast.makeText(getApplicationContext(), marcador.getPosition().toString(), Toast.LENGTH_LONG).show();
+
+                    Double lat = marcador.getPosition().latitude;
+                    Double lon = marcador.getPosition().longitude;
+
+                    String[] posit = {lat.toString(),lon.toString()};
+
+
+                    returnIntent.putExtra("ubicacion", posit);
+
                     setResult(Activity.RESULT_OK, returnIntent);
                     finish();
                 }

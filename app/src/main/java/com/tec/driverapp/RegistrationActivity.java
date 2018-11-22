@@ -19,6 +19,10 @@ import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class RegistrationActivity extends AppCompatActivity {
     static TextView carnet;
@@ -30,6 +34,8 @@ public class RegistrationActivity extends AppCompatActivity {
     String resultnombre;
     static String resultpass;
 
+    boolean flag = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +45,17 @@ public class RegistrationActivity extends AppCompatActivity {
         final EditText nombre = (EditText) findViewById(R.id.nombrec);
         final EditText pass = (EditText) findViewById(R.id.contrasregistr);
         final RelativeLayout register = (RelativeLayout) findViewById(R.id.registrarse);
-        final Button ubicar = (Button) findViewById(R.id.location);
+        final TextView inic = (TextView) findViewById(R.id.volveriniciar);
 
         carnet = (TextView) findViewById(R.id.carnet);
 
-        ubicar.setOnClickListener(new View.OnClickListener() {
+
+        inic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent ubintent = new Intent(RegistrationActivity.this, GetLocationActivity.class);
-                startActivityForResult(ubintent, 2);
-                //startActivityForResult(ubicintent, 1);
+                Intent volver = new Intent(RegistrationActivity.this, MainActivity.class);
+                RegistrationActivity.this.startActivity(volver);
+                finish();
             }
         });
 
@@ -57,8 +64,6 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent registerIntent = new Intent(RegistrationActivity.this, BarcodeScanner.class);
                 startActivityForResult(registerIntent, 1);
-
-                //RegistrationActivity.this.startActivity(registerIntent);
             }
         });
 
@@ -66,15 +71,13 @@ public class RegistrationActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resultnombre = nombre.getText().toString();
-                resultcarnet = carnet.getText().toString();
-                resultpass = pass.getText().toString();
 
-                MainActivity.nombre = nombre.getText().toString();
-                MainActivity.carnet.setText(carnet.getText().toString());
-                MainActivity.contraseñalogin.setText(pass.getText().toString());
-                finish();
-               // getManualRegistrationInfo();
+                String[] datos = getManualRegistrationInfo();
+
+                if(flag){
+                    Toast.makeText(getApplicationContext(), "AAAAAAAA", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -90,17 +93,22 @@ public class RegistrationActivity extends AppCompatActivity {
      * Devuelve los datos ingresados por el conductor que se va a registrar en un array, devuelve null si hay algún campo sin rellenar.
      */
     public String[] getManualRegistrationInfo(){
-        //FALTA INCLUIR UBICACION
         String[] resultado = new String[3];
-        if(!resultnombre.matches("")&&!resultpass.matches("")&&!resultcarnet.matches("")){
+
+        if(!carnet.getText().toString().isEmpty()&&!nombre.getText().toString().isEmpty()&&!pass.getText().toString().isEmpty()) {
+            resultnombre = nombre.getText().toString();
+            resultpass = pass.getText().toString();
+            resultcarnet = carnet.getText().toString();
+
             resultado[0] = resultnombre;
             resultado[1] = resultpass;
             resultado[2] = resultcarnet;
+            flag = true;
             return resultado;
-        }else{
+         }else{
             Toast.makeText(getApplicationContext(), "Por favor, ingrese correctamente sus datos", Toast.LENGTH_LONG).show();
-            return null;
-        }
+           return null;
+         }
     }
 
     @Override
@@ -109,11 +117,6 @@ public class RegistrationActivity extends AppCompatActivity {
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
                 String resultado = data.getStringExtra("resultado");
-                carnet.setText(resultado);
-            }
-        }else if(requestCode == 2){
-            if(resultCode == Activity.RESULT_OK){
-                String resultado = data.getStringExtra("ubicacion");
                 carnet.setText(resultado);
             }
         }
