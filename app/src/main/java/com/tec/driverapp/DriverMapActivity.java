@@ -6,10 +6,12 @@
     import android.graphics.Point;
     import android.location.Location;
     import android.location.LocationListener;
+    import android.os.Build;
     import android.os.Handler;
     import android.os.SystemClock;
     import android.support.annotation.NonNull;
     import android.support.annotation.Nullable;
+    import android.support.annotation.RequiresApi;
     import android.support.v4.app.ActivityCompat;
     import android.support.v4.app.FragmentActivity;
     import android.os.Bundle;
@@ -32,6 +34,9 @@
     import com.google.android.gms.maps.model.LatLng;
     import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
+    import com.tec.comm.RegistrarConductor;
+
+    import java.io.IOException;
 
 
     public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
@@ -72,6 +77,7 @@
             Marker TEC = mMap.addMarker(new MarkerOptions().position(lalg).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onMapClick(LatLng latLng) {
                     if(ubicacion==null) {
@@ -83,10 +89,25 @@
                         if(RegistrationActivity.nuevoconductor != null){
                             RegistrationActivity.nuevoconductor.setPosLatitud(lat);
                             RegistrationActivity.nuevoconductor.setPosLongitud(lon);
+
+
+                            RegistrarConductor registrarConductor = new RegistrarConductor();
+                            try {
+                                registrarConductor.registrarConductor(RegistrationActivity.nuevoconductor);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                         if(MainActivity.conductor!= null){
                             MainActivity.conductor.setPosLatitud(lat);
                             MainActivity.conductor.setPosLongitud(lon);
+
+                            RegistrarConductor registrarConductor = new RegistrarConductor();
+                            try {
+                                registrarConductor.registrarConductor(MainActivity.conductor);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         //Verificar
