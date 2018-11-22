@@ -33,8 +33,8 @@ public class RegistrationActivity extends AppCompatActivity {
     String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
 
     String resultcarnet = "";
-    String resultnombre = "";
-    String resultpass = "";
+    static String resultnombre = "";
+    static String resultpass = "";
     boolean flag = false;
     RelativeLayout register;
 
@@ -72,17 +72,19 @@ public class RegistrationActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!carnet.getText().toString().isEmpty()&&!nombre.getText().toString().isEmpty()&&!pass.getText().toString().isEmpty()) {
+                    resultnombre = nombre.getText().toString();
+                    resultpass = pass.getText().toString();
+                    resultcarnet = carnet.getText().toString();
+                    //nuevoconductor = getManualRegistrationInfo();
+                    MainActivity.carnet.setText(carnet.getText().toString());
+                    MainActivity.contraseñalogin.setText(pass.getText().toString());
+                    //getManualRegistrationInfo();
+                    nuevoconductor = new Conductor(resultnombre, resultpass, resultcarnet, 0, 0);
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Ingresar todos los datos",Toast.LENGTH_SHORT).show();
 
-                resultnombre = nombre.getText().toString();
-                resultpass = pass.getText().toString();
-                resultcarnet = carnet.getText().toString();
-
-                nuevoconductor = getManualRegistrationInfo();
-                //AQUI SE MANDA AL SERVER
-
-             if(flag) {
-                    Intent mapa = new Intent(RegistrationActivity.this, DriverMapActivity.class);
-                    RegistrationActivity.this.startActivity(mapa);
                 }
             }
         });
@@ -98,20 +100,7 @@ public class RegistrationActivity extends AppCompatActivity {
     /*
      * Devuelve los datos ingresados por el conductor que se va a registrar en un array, devuelve null si hay algún campo sin rellenar.
      */
-    public Conductor getManualRegistrationInfo(){
-        Conductor resultado;
 
-        if(!resultnombre.matches("")&&!resultpass.matches("")&&!resultcarnet.matches("")) {
-
-            resultado = new Conductor(resultnombre, resultpass, resultcarnet, 0, 0);
-            flag = true;
-            return resultado;
-
-         }else{
-            Toast.makeText(getApplicationContext(), "Por favor, ingrese correctamente sus datos", Toast.LENGTH_LONG).show();
-            return null;
-         }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

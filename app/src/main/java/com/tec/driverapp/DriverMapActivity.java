@@ -43,6 +43,7 @@
         SupportMapFragment mapFragment;
         static Marker carmarker;
         Marker ubicacion;
+        String nombre;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -75,7 +76,12 @@
                 @Override
                 public void onMapClick(LatLng latLng) {
                     if(ubicacion==null) {
-                        ubicacion = mMap.addMarker(new MarkerOptions().position(latLng).title("carro").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
+                        if(RegistrationActivity.resultnombre=="") {
+                            nombre= MainActivity.nombre;
+                        }else{
+                            nombre = RegistrationActivity.resultnombre;
+                        }
+                        ubicacion = mMap.addMarker(new MarkerOptions().position(latLng).title(nombre).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
 
                         Double lat = ubicacion.getPosition().latitude;
                         Double lon = ubicacion.getPosition().longitude;
@@ -83,6 +89,8 @@
                         if(RegistrationActivity.nuevoconductor != null){
                             RegistrationActivity.nuevoconductor.setPosLatitud(lat);
                             RegistrationActivity.nuevoconductor.setPosLongitud(lon);
+
+                            //Aqui se manda al server
                         }
                         if(MainActivity.conductor!= null){
                             MainActivity.conductor.setPosLatitud(lat);
