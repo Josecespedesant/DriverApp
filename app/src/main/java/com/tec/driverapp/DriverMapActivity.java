@@ -118,7 +118,6 @@
                             }*/
                         }
 
-
                         //Verificar
                         //LatLng posEstu = new LatLng(estudiante.getPosLatitud(), estudiante.getPosLongitud());
                         //if(estudiante.isNecesitaViaje()){
