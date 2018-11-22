@@ -19,9 +19,11 @@ public class Estudiante {
     private double posLatitud;
     private double promedio;
 
+    private boolean necesitaViaje = false;
+
     public Estudiante(String nombre, String contrasena, String carnet, double posLongitud, double posLatitud) {
         this.nombre = nombre;
-        this.carnet =carnet;
+        this.carnet = carnet;
         this.viajesRealizados = 0;
         this.numCalificaciones = 0;
         this.amigos = new LinkedList<Conductor>();
@@ -49,6 +51,14 @@ public class Estudiante {
 
     public void setViajesRealizados(int viajesRealizados) {
         this.viajesRealizados = viajesRealizados;
+    }
+
+    public boolean isNecesitaViaje() {
+        return necesitaViaje;
+    }
+
+    public void setNecesitaViaje(boolean necesitaViaje) {
+        this.necesitaViaje = necesitaViaje;
     }
 
     public int getNumCalificaciones() {

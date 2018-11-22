@@ -71,12 +71,17 @@
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(false);
 
-            final LatLng  lalg = new LatLng(9.857191, -83.912284);
-            Marker TEC = mMap.addMarker(new MarkerOptions().position(lalg).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
+            final LatLng  posTEC = new LatLng(9.857191, -83.912284);
+            Marker TEC = mMap.addMarker(new MarkerOptions().position(posTEC).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
 
             mMap.setMyLocationEnabled(false);
-           // LatLng locationChofer = new LatLng(estudiante.getPosicionHogar().getLat(), estudiante.getPosicionHogar().getLon()); //cambiar por la ruta no pos HOGAR
-           // markerEstudiante = mMap.addMarker(new MarkerOptions().position(locationChofer).title("Ride").icon(BitmapDescriptorFactory.fromResource(R.drawable.student)));
+
+            if(estudiante.isNecesitaViaje() == true) {
+                //LatLng locationChofer = new LatLng(estudiante.getPosicionHogar().getLat(), estudiante.getPosicionHogar().getLon()); //cambiar por la ruta no pos HOGAR
+                //markerEstudiante = mMap.addMarker(new MarkerOptions().position(locationChofer).title("Ride").icon(BitmapDescriptorFactory.fromResource(R.drawable.student)));
+            }else{
+                //Toast.makeText(getApplicationContext(), "No hay ningún estudiante que necesite viaje", Toast.LENGTH_LONG).show();
+            }
 
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -93,25 +98,33 @@
                             RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
 
                             NuevoConductor test = new NuevoConductor();
-                            try {
+                            /*try {
                                 test.registrar(RegistrationActivity.nuevoconductor);
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                         }
                         if(MainActivity.conductor!= null){
                             MainActivity.conductor.setPosicionHogar(new Posicion(lat, lon));
 
                             NuevoConductor test = new NuevoConductor();
-                            try {
+                            /*try {
                                 test.registrar(RegistrationActivity.nuevoconductor);
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                         }
 
+
                         //Verificar
-                        animateMarker(ubicacion, lalg, false);
+                        LatLng posEstu = new LatLng(estudiante.getPosLatitud(), estudiante.getPosLongitud());
+                        if(estudiante.isNecesitaViaje()){
+                            animateMarker(ubicacion, posEstu, false);
+                            //markerEstudiante.remove();
+                            animateMarker(ubicacion, posTEC, false);
+                        }else{
+                            animateMarker(ubicacion, posTEC, false);
+                        }
                     }
                 }
             });
@@ -131,6 +144,7 @@
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+
                     long elapsed = SystemClock.uptimeMillis() - start;
                     float t = interpolator.getInterpolation((float) elapsed
                             / duration);
