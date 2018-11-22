@@ -1,13 +1,10 @@
     package com.tec.driverapp;
 
     import android.Manifest;
-    import android.app.AlertDialog;
-    import android.content.DialogInterface;
     import android.content.pm.PackageManager;
-    import android.graphics.Camera;
     import android.graphics.Point;
     import android.location.Location;
-    import android.location.LocationListener;
+    import android.os.AsyncTask;
     import android.os.Build;
     import android.os.Handler;
     import android.os.SystemClock;
@@ -17,16 +14,11 @@
     import android.support.v4.app.ActivityCompat;
     import android.support.v4.app.FragmentActivity;
     import android.os.Bundle;
-    import android.view.View;
     import android.view.animation.Interpolator;
     import android.view.animation.LinearInterpolator;
-    import android.widget.PopupMenu;
     import android.widget.Toast;
-
     import com.google.android.gms.common.ConnectionResult;
     import com.google.android.gms.common.api.GoogleApiClient;
-    import com.google.android.gms.common.api.PendingResult;
-    import com.google.android.gms.common.api.Status;
     import com.google.android.gms.location.LocationRequest;
     import com.google.android.gms.location.LocationServices;
     import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,12 +30,14 @@
     import com.google.android.gms.maps.model.LatLng;
     import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
-    import com.tec.comm.RegistrarConductor;
+    import com.tec.comm.RegistroConductor;
 
     import java.io.IOException;
 
 
     public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+        private final String registrarConductorURL = "http://localhost:8080/registro-conductor";
 
         private GoogleMap mMap;
         GoogleApiClient googleApiClient;
@@ -52,8 +46,6 @@
         SupportMapFragment mapFragment;
         static Marker carmarker;
         Marker ubicacion;
-
-
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -93,48 +85,31 @@
                         Double lon = ubicacion.getPosition().longitude;
 
                         if(RegistrationActivity.nuevoconductor != null){
-                            RegistrationActivity.nuevoconductor.setPosLatitud(lat);
-                            RegistrationActivity.nuevoconductor.setPosLongitud(lon);
+                            RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
 
-
-                            RegistrarConductor registrarConductor = new RegistrarConductor();
+                            RegistroConductor test = new RegistroConductor();
                             try {
-                                registrarConductor.registrarConductor(RegistrationActivity.nuevoconductor);
+                                test.registrar(RegistrationActivity.nuevoconductor);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                         if(MainActivity.conductor!= null){
-                            MainActivity.conductor.setPosLatitud(lat);
-                            MainActivity.conductor.setPosLongitud(lon);
+                            MainActivity.conductor.setPosicionHogar(new Posicion(lat, lon));
 
-                            RegistrarConductor registrarConductor = new RegistrarConductor();
+                            RegistroConductor test = new RegistroConductor();
                             try {
-                                registrarConductor.registrarConductor(MainActivity.conductor);
+                                test.registrar(RegistrationActivity.nuevoconductor);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(DriverMapActivity.this);
-                        builder.setMessage("¿Desea iniciar el modo carpooling?")
-                                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        animateMarker(ubicacion, lalg, false);
-                                    }
-                                }).setNegativeButton("Cancel", null);
-
-                        AlertDialog alert = builder.create();
-                        alert.show();
-
                         //Verificar
-
+                        animateMarker(ubicacion, lalg, false);
                     }
                 }
             });
-
-
         }
 
         public void animateMarker(final Marker marker, final LatLng toPosition,
