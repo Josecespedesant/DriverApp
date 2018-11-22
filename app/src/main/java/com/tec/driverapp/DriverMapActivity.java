@@ -80,6 +80,16 @@
                         Double lat = ubicacion.getPosition().latitude;
                         Double lon = ubicacion.getPosition().longitude;
 
+                        if(RegistrationActivity.nuevoconductor != null){
+                            RegistrationActivity.nuevoconductor.setPosLatitud(lat);
+                            RegistrationActivity.nuevoconductor.setPosLongitud(lon);
+                        }
+                        if(MainActivity.conductor!= null){
+                            MainActivity.conductor.setPosLatitud(lat);
+                            MainActivity.conductor.setPosLongitud(lon);
+                        }
+
+                        //Verificar
                         animateMarker(ubicacion, lalg, false);
                     }
                 }
@@ -97,7 +107,7 @@
             Projection proj = mMap.getProjection();
             Point startPoint = proj.toScreenLocation(marker.getPosition());
             final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-            final long duration = 50000;
+            final long duration = 20000;
 
             final Interpolator interpolator = new LinearInterpolator();
 

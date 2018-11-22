@@ -25,6 +25,7 @@
         import com.linkedin.platform.listeners.ApiResponse;
         import com.linkedin.platform.listeners.AuthListener;
         import com.linkedin.platform.utils.Scope;
+        import com.tec.entities.Conductor;
 
         import org.json.JSONObject;
 
@@ -38,6 +39,8 @@
             static TextView carnet;
             static EditText contraseñalogin;
             static String nombre=null;
+
+            static Conductor conductor;
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +144,7 @@
             public void finalResult(JSONObject jsonObject){
                 try{
                     Toast.makeText(getApplicationContext(),"Bienvenido "+ jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName").toString(),Toast.LENGTH_SHORT).show();
+                    conductor = new Conductor(jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName"), null, carnet.getText().toString(),0,0);
 
                 }catch (Exception e){
                     e.printStackTrace();

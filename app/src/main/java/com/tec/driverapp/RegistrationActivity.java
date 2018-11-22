@@ -17,6 +17,7 @@ import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
+import com.tec.entities.Conductor;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -28,27 +29,27 @@ public class RegistrationActivity extends AppCompatActivity {
     static TextView carnet;
     EditText nombre;
     static EditText pass;
+
     String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
 
-    String resultcarnet;
-    String resultnombre;
-    static String resultpass;
-
+    String resultcarnet = "";
+    String resultnombre = "";
+    String resultpass = "";
     boolean flag = false;
+    RelativeLayout register;
 
+    static Conductor nuevoconductor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
         final EditText nombre = (EditText) findViewById(R.id.nombrec);
         final EditText pass = (EditText) findViewById(R.id.contrasregistr);
-        final RelativeLayout register = (RelativeLayout) findViewById(R.id.registrarse);
+        register = (RelativeLayout) findViewById(R.id.registrarse);
         final TextView inic = (TextView) findViewById(R.id.volveriniciar);
 
         carnet = (TextView) findViewById(R.id.carnet);
-
 
         inic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +73,17 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String[] datos = getManualRegistrationInfo();
+                resultnombre = nombre.getText().toString();
+                resultpass = pass.getText().toString();
+                resultcarnet = carnet.getText().toString();
 
-                if(flag){
-                    Toast.makeText(getApplicationContext(), "AAAAAAAA", Toast.LENGTH_LONG).show();
+                nuevoconductor = getManualRegistrationInfo();
+                //AQUI SE MANDA AL SERVER
+
+             if(flag) {
+                    Intent mapa = new Intent(RegistrationActivity.this, DriverMapActivity.class);
+                    RegistrationActivity.this.startActivity(mapa);
                 }
-
             }
         });
 
@@ -92,22 +98,18 @@ public class RegistrationActivity extends AppCompatActivity {
     /*
      * Devuelve los datos ingresados por el conductor que se va a registrar en un array, devuelve null si hay algún campo sin rellenar.
      */
-    public String[] getManualRegistrationInfo(){
-        String[] resultado = new String[3];
+    public Conductor getManualRegistrationInfo(){
+        Conductor resultado;
 
-        if(!carnet.getText().toString().isEmpty()&&!nombre.getText().toString().isEmpty()&&!pass.getText().toString().isEmpty()) {
-            resultnombre = nombre.getText().toString();
-            resultpass = pass.getText().toString();
-            resultcarnet = carnet.getText().toString();
+        if(!resultnombre.matches("")&&!resultpass.matches("")&&!resultcarnet.matches("")) {
 
-            resultado[0] = resultnombre;
-            resultado[1] = resultpass;
-            resultado[2] = resultcarnet;
+            resultado = new Conductor(resultnombre, resultpass, resultcarnet, 0, 0);
             flag = true;
             return resultado;
+
          }else{
             Toast.makeText(getApplicationContext(), "Por favor, ingrese correctamente sus datos", Toast.LENGTH_LONG).show();
-           return null;
+            return null;
          }
     }
 
