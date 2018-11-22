@@ -53,14 +53,14 @@
                     @Override
                     public void onClick(View v) {
 
-                        if(carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)){
-                            Toast.makeText(getApplicationContext(),"Bienvenido: " + nombre,Toast.LENGTH_SHORT).show();
+                       // if(carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)){
+                      //      Toast.makeText(getApplicationContext(),"Bienvenido: " + nombre,Toast.LENGTH_SHORT).show();
 
-                            Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
-                            MainActivity.this.startActivity(mapintent);
-                        }else{
+                        Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
+                        MainActivity.this.startActivity(mapintent);
+                     //   }else{
                             Toast.makeText(getApplicationContext(),"Carnet o contraseña invalida",Toast.LENGTH_SHORT).show();
-                        }
+                    //    }
 
                     }
                 });

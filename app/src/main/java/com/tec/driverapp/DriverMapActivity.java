@@ -36,6 +36,7 @@
         LocationRequest locationRequest;
         SupportMapFragment mapFragment;
         static Marker carmarker;
+        Marker ubicacion;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -49,8 +50,6 @@
             }else{
                 mapFragment.getMapAsync(this);
             }
-
-
         }
 
         @Override
@@ -61,10 +60,22 @@
                 return;
             }
             buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(false);
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    if(ubicacion==null) {
+                        mMap.clear();
+                        ubicacion = mMap.addMarker(new MarkerOptions().position(latLng).title("carro").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
+
+                        Double lat = ubicacion.getPosition().latitude;
+                        Double lon = ubicacion.getPosition().longitude;
+                    }
+                }
+            });
 
             LatLng  lalg = new LatLng(9.857191, -83.912284);
-            mMap.addMarker(new MarkerOptions().position(lalg));
+            mMap.addMarker(new MarkerOptions().position(lalg).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
 
         }
 
@@ -89,7 +100,7 @@
                 carmarker.remove();
             }
 
-            carmarker = mMap.addMarker(new MarkerOptions().position(latLng).title("caca").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
+         //   carmarker = mMap.addMarker(new MarkerOptions().position(latLng).title("carro").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
 
         }
 
