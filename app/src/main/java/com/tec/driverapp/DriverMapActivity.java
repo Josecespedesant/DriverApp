@@ -46,6 +46,7 @@
         Marker ubicacion;
         Estudiante estudiante;
         Marker markerEstudiante;
+        static Boolean vasolo=true;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@
                 @Override
                 public void onMapClick(LatLng latLng) {
                     if(ubicacion==null) {
-                        ubicacion = mMap.addMarker(new MarkerOptions().position(latLng).title("carro").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
+                        ubicacion = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
 
                         Double lat = ubicacion.getPosition().latitude;
                         Double lon = ubicacion.getPosition().longitude;
@@ -146,8 +147,8 @@
 
             int distance = dist * 10000;
             final int speed = 10;
-
             final long duration = distance/speed;
+            ubicacion.setTitle(duration/1000+" Segundos");
 
             final Interpolator interpolator = new LinearInterpolator();
 

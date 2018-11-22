@@ -1,6 +1,9 @@
         package com.tec.driverapp;
 
         import android.annotation.SuppressLint;
+        import android.app.AlertDialog;
+        import android.app.Dialog;
+        import android.content.DialogInterface;
         import android.content.Intent;
         import android.content.pm.PackageInfo;
         import android.content.pm.PackageManager;
@@ -38,7 +41,7 @@
             String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
             static TextView carnet;
             static EditText contraseñalogin;
-            static String nombre=null;
+            static String nombre = null;
 
             static Conductor conductor;
 
@@ -56,13 +59,13 @@
                     @Override
                     public void onClick(View v) {
 
-                        if(carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)){
-                            Toast.makeText(getApplicationContext(),"Bienvenido: " + RegistrationActivity.resultnombre,Toast.LENGTH_SHORT).show();
+                        if (carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)) {
+                            Toast.makeText(getApplicationContext(), "Bienvenido: " + RegistrationActivity.resultnombre, Toast.LENGTH_SHORT).show();
 
-                        Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
-                        MainActivity.this.startActivity(mapintent);
-                        }else{
-                            Toast.makeText(getApplicationContext(),"Carnet o contraseña invalida",Toast.LENGTH_SHORT).show();
+                            Dialog dialo = alertDialog();
+                            dialo.show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Carnet o contraseña invalida", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -113,20 +116,19 @@
             @Override
             protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
                 super.onActivityResult(requestCode, resultCode, data);
-                if(requestCode == 1){
-                    if(resultCode == RESULT_OK){
+                if (requestCode == 1) {
+                    if (resultCode == RESULT_OK) {
                         String resultado = data.getStringExtra("resultado");
                         carnet.setText(resultado);
-                        Toast.makeText(getApplicationContext(),"Su carnet es: "+resultado,Toast.LENGTH_SHORT).show();
-
-                        Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
-                        MainActivity.this.startActivity(mapintent);
+                        Toast.makeText(getApplicationContext(), "Su carnet es: " + resultado, Toast.LENGTH_SHORT).show();
+                        Dialog dialo = alertDialog();
+                        dialo.show();
                     }
                 }
                 LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
             }
 
-            public void linkedinHelperApi(){
+            public void linkedinHelperApi() {
                 APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
                 apiHelper.getRequest(MainActivity.this, url, new ApiListener() {
                     @Override
@@ -141,13 +143,36 @@
                 });
             }
 
-            public void finalResult(JSONObject jsonObject){
-                try{
-                    Toast.makeText(getApplicationContext(),"Bienvenido "+ jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName").toString(),Toast.LENGTH_SHORT).show();
-                    nombre = jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName");
-                    conductor = new Conductor(nombre, null, carnet.getText().toString(),0,0);
 
-                }catch (Exception e){
+            public Dialog alertDialog() {
+                AlertDialog.Builder mbuilder = new AlertDialog.Builder(MainActivity.this);
+                mbuilder.setMessage("Continuar solo?")
+                        .setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
+                                MainActivity.this.startActivity(mapintent);
+                                DriverMapActivity.vasolo = true;
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
+                                MainActivity.this.startActivity(mapintent);
+                                DriverMapActivity.vasolo = false;
+                            }
+                        });
+                return mbuilder.create();
+
+            }
+
+
+            public void finalResult(JSONObject jsonObject) {
+                try {
+                    Toast.makeText(getApplicationContext(), "Bienvenido " + jsonObject.get("firstName").toString() + " " + jsonObject.get("lastName").toString(), Toast.LENGTH_SHORT).show();
+                    nombre = jsonObject.get("firstName").toString() + " " + jsonObject.get("lastName");
+                    conductor = new Conductor(nombre, null, carnet.getText().toString(), 0, 0);
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
