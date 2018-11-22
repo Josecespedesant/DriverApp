@@ -1,6 +1,8 @@
     package com.tec.driverapp;
 
     import android.Manifest;
+    import android.app.AlertDialog;
+    import android.content.DialogInterface;
     import android.content.pm.PackageManager;
     import android.graphics.Camera;
     import android.graphics.Point;
@@ -15,8 +17,10 @@
     import android.support.v4.app.ActivityCompat;
     import android.support.v4.app.FragmentActivity;
     import android.os.Bundle;
+    import android.view.View;
     import android.view.animation.Interpolator;
     import android.view.animation.LinearInterpolator;
+    import android.widget.PopupMenu;
     import android.widget.Toast;
 
     import com.google.android.gms.common.ConnectionResult;
@@ -48,6 +52,8 @@
         SupportMapFragment mapFragment;
         static Marker carmarker;
         Marker ubicacion;
+
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -110,13 +116,23 @@
                             }
                         }
 
+                        AlertDialog.Builder builder = new AlertDialog.Builder(DriverMapActivity.this);
+                        builder.setMessage("¿Desea iniciar el modo carpooling?")
+                                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        animateMarker(ubicacion, lalg, false);
+                                    }
+                                }).setNegativeButton("Cancel", null);
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
                         //Verificar
-                        animateMarker(ubicacion, lalg, false);
+
                     }
                 }
             });
-
-
 
 
         }

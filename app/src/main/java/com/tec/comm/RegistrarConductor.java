@@ -26,7 +26,7 @@ import java.util.List;
 
 public class RegistrarConductor {
 
-    private final String registrarConductorURL = "http://192.168.100.7:8080/registrar-conductor";
+    private final String registrarConductorURL = "http://192.168.100.2:8080/registrar-conductor";
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public boolean registrarConductor(Conductor conductor) throws IOException {
