@@ -92,11 +92,9 @@
 
 
                             RegistrarConductor registrarConductor = new RegistrarConductor();
-                            try {
-                                registrarConductor.registrarConductor(RegistrationActivity.nuevoconductor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+
+                                registrarConductor.sendRegistro(RegistrationActivity.nuevoconductor);
+
 
                         }
                         if(MainActivity.conductor!= null){
@@ -104,11 +102,8 @@
                             MainActivity.conductor.setPosLongitud(lon);
 
                             RegistrarConductor registrarConductor = new RegistrarConductor();
-                            try {
-                                registrarConductor.registrarConductor(MainActivity.conductor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                                registrarConductor.sendRegistro(MainActivity.conductor);
+
                         }
 
                         //Verificar
