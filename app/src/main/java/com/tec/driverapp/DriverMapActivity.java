@@ -4,7 +4,6 @@
     import android.content.pm.PackageManager;
     import android.graphics.Point;
     import android.location.Location;
-    import android.os.AsyncTask;
     import android.os.Build;
     import android.os.Handler;
     import android.os.SystemClock;
@@ -30,7 +29,7 @@
     import com.google.android.gms.maps.model.LatLng;
     import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
-    import com.tec.comm.RegistroConductor;
+    import com.tec.comm.NuevoConductor;
 
     import java.io.IOException;
 
@@ -87,7 +86,7 @@
                         if(RegistrationActivity.nuevoconductor != null){
                             RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
 
-                            RegistroConductor test = new RegistroConductor();
+                            NuevoConductor test = new NuevoConductor();
                             try {
                                 test.registrar(RegistrationActivity.nuevoconductor);
                             } catch (IOException e) {
@@ -97,7 +96,7 @@
                         if(MainActivity.conductor!= null){
                             MainActivity.conductor.setPosicionHogar(new Posicion(lat, lon));
 
-                            RegistroConductor test = new RegistroConductor();
+                            NuevoConductor test = new NuevoConductor();
                             try {
                                 test.registrar(RegistrationActivity.nuevoconductor);
                             } catch (IOException e) {
