@@ -13,6 +13,7 @@
     import android.support.v4.app.ActivityCompat;
     import android.support.v4.app.FragmentActivity;
     import android.os.Bundle;
+    import android.view.View;
     import android.view.animation.Interpolator;
     import android.view.animation.LinearInterpolator;
     import android.widget.Toast;
@@ -76,12 +77,14 @@
 
             mMap.setMyLocationEnabled(false);
 
-            if(estudiante.isNecesitaViaje() == true) {
+
+
+            //if(estudiante.isNecesitaViaje() == true) {
                 //LatLng locationChofer = new LatLng(estudiante.getPosicionHogar().getLat(), estudiante.getPosicionHogar().getLon()); //cambiar por la ruta no pos HOGAR
                 //markerEstudiante = mMap.addMarker(new MarkerOptions().position(locationChofer).title("Ride").icon(BitmapDescriptorFactory.fromResource(R.drawable.student)));
-            }else{
+           // }else{
                 //Toast.makeText(getApplicationContext(), "No hay ningún estudiante que necesite viaje", Toast.LENGTH_LONG).show();
-            }
+            //}
 
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -117,27 +120,35 @@
 
 
                         //Verificar
-                        LatLng posEstu = new LatLng(estudiante.getPosLatitud(), estudiante.getPosLongitud());
-                        if(estudiante.isNecesitaViaje()){
-                            animateMarker(ubicacion, posEstu, false);
+                        //LatLng posEstu = new LatLng(estudiante.getPosLatitud(), estudiante.getPosLongitud());
+                        //if(estudiante.isNecesitaViaje()){
+                            //animateMarker(ubicacion, posEstu, false);
                             //markerEstudiante.remove();
-                            animateMarker(ubicacion, posTEC, false);
-                        }else{
-                            animateMarker(ubicacion, posTEC, false);
-                        }
+                            animateMarker(ubicacion, posTEC, false, 10);
+                        //}else{
+                        //    animateMarker(ubicacion, posTEC, false);
+                        //}
+
+
+
+
                     }
                 }
             });
         }
 
         public void animateMarker(final Marker marker, final LatLng toPosition,
-                                  final boolean hideMarker) {
+                                  final boolean hideMarker, int dist) {
             final Handler handler = new Handler();
             final long start = SystemClock.uptimeMillis();
             Projection proj = mMap.getProjection();
             Point startPoint = proj.toScreenLocation(marker.getPosition());
             final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-            final long duration = 20000;
+
+            int distance = dist * 10000;
+            final int speed = 10;
+
+            final long duration = distance/speed;
 
             final Interpolator interpolator = new LinearInterpolator();
 
