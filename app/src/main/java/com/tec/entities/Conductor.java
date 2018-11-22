@@ -1,5 +1,7 @@
 package com.tec.entities;
 
+import com.tec.driverapp.Posicion;
+
 import java.util.LinkedList;
 
 /**
@@ -14,16 +16,22 @@ public class Conductor {
         private String carnet;
         private LinkedList<Estudiante> amigos;
         private int numCalificaciones;
-        private double posLongitud;
-        private double posLatitud;
+        private Posicion posicionHogar;
         private double promedio;
 
-        public Conductor(String nombre, String contrasena, String carnet, double posLongitud, double posLatitud) {
+    public Posicion getPosicionHogar() {
+        return posicionHogar;
+    }
+
+    public void setPosicionHogar(Posicion posicionHogar) {
+        this.posicionHogar = posicionHogar;
+    }
+
+    public Conductor(String nombre, String contrasena, String carnet, double posLongitud, double posLatitud) {
             this.nombre = nombre;
             this.contrasena = contrasena;
             this.carnet = carnet;
-            this.posLatitud = posLatitud;
-            this.posLongitud = posLongitud;
+            this.posicionHogar = new Posicion(posLongitud, posLongitud);
             this.numCalificaciones = 0;
             this.amigos = new LinkedList<Estudiante>();
         }
@@ -35,8 +43,7 @@ public class Conductor {
             this.contrasena = contrasena;
             this.carnet = carnet;
             this.amigos = amigos;
-            this.posLongitud = posLongitud;
-            this.posLatitud = posLatitud;
+            this.posicionHogar = new Posicion(posLatitud, posLongitud);
             this.promedio = promedio;
         }
 
@@ -46,22 +53,6 @@ public class Conductor {
 
     public void setNumCalificaciones(int numCalificaciones) {
         this.numCalificaciones = numCalificaciones;
-    }
-
-    public double getPosLongitud() {
-        return posLongitud;
-    }
-
-    public void setPosLongitud(double posLongitud) {
-        this.posLongitud = posLongitud;
-    }
-
-    public double getPosLatitud() {
-        return posLatitud;
-    }
-
-    public void setPosLatitud(double posLatitud) {
-        this.posLatitud = posLatitud;
     }
 
     public double getPromedio() {

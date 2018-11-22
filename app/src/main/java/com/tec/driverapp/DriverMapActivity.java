@@ -2,10 +2,9 @@
 
     import android.Manifest;
     import android.content.pm.PackageManager;
-    import android.graphics.Camera;
     import android.graphics.Point;
     import android.location.Location;
-    import android.location.LocationListener;
+    import android.os.AsyncTask;
     import android.os.Build;
     import android.os.Handler;
     import android.os.SystemClock;
@@ -18,11 +17,8 @@
     import android.view.animation.Interpolator;
     import android.view.animation.LinearInterpolator;
     import android.widget.Toast;
-
     import com.google.android.gms.common.ConnectionResult;
     import com.google.android.gms.common.api.GoogleApiClient;
-    import com.google.android.gms.common.api.PendingResult;
-    import com.google.android.gms.common.api.Status;
     import com.google.android.gms.location.LocationRequest;
     import com.google.android.gms.location.LocationServices;
     import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,12 +30,14 @@
     import com.google.android.gms.maps.model.LatLng;
     import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
-    import com.tec.comm.RegistrarConductor;
+    import com.tec.comm.RegistroConductor;
 
     import java.io.IOException;
 
 
     public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+        private final String registrarConductorURL = "http://localhost:8080/registro-conductor";
 
         private GoogleMap mMap;
         GoogleApiClient googleApiClient;
@@ -87,23 +85,24 @@
                         Double lon = ubicacion.getPosition().longitude;
 
                         if(RegistrationActivity.nuevoconductor != null){
-                            RegistrationActivity.nuevoconductor.setPosLatitud(lat);
-                            RegistrationActivity.nuevoconductor.setPosLongitud(lon);
+                            RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
 
-
-                            RegistrarConductor registrarConductor = new RegistrarConductor();
-
-                                registrarConductor.sendRegistro(RegistrationActivity.nuevoconductor);
-
-
+                            RegistroConductor test = new RegistroConductor();
+                            try {
+                                test.registrar(RegistrationActivity.nuevoconductor);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                         if(MainActivity.conductor!= null){
-                            MainActivity.conductor.setPosLatitud(lat);
-                            MainActivity.conductor.setPosLongitud(lon);
+                            MainActivity.conductor.setPosicionHogar(new Posicion(lat, lon));
 
-                            RegistrarConductor registrarConductor = new RegistrarConductor();
-                                registrarConductor.sendRegistro(MainActivity.conductor);
-
+                            RegistroConductor test = new RegistroConductor();
+                            try {
+                                test.registrar(RegistrationActivity.nuevoconductor);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         //Verificar
@@ -111,10 +110,6 @@
                     }
                 }
             });
-
-
-
-
         }
 
         public void animateMarker(final Marker marker, final LatLng toPosition,
