@@ -56,14 +56,14 @@
                     @Override
                     public void onClick(View v) {
 
-                       // if(carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)){
-                      //      Toast.makeText(getApplicationContext(),"Bienvenido: " + nombre,Toast.LENGTH_SHORT).show();
+                        if(carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)){
+                            Toast.makeText(getApplicationContext(),"Bienvenido: " + RegistrationActivity.resultnombre,Toast.LENGTH_SHORT).show();
 
                         Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
                         MainActivity.this.startActivity(mapintent);
-                     //   }else{
+                        }else{
                             Toast.makeText(getApplicationContext(),"Carnet o contraseña invalida",Toast.LENGTH_SHORT).show();
-                    //    }
+                        }
 
                     }
                 });
@@ -144,7 +144,8 @@
             public void finalResult(JSONObject jsonObject){
                 try{
                     Toast.makeText(getApplicationContext(),"Bienvenido "+ jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName").toString(),Toast.LENGTH_SHORT).show();
-                    conductor = new Conductor(jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName"), null, carnet.getText().toString(),0,0);
+                    nombre = jsonObject.get("firstName").toString()+ " "+ jsonObject.get("lastName");
+                    conductor = new Conductor(nombre, null, carnet.getText().toString(),0,0);
 
                 }catch (Exception e){
                     e.printStackTrace();
