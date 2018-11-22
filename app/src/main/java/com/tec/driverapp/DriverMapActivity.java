@@ -30,14 +30,12 @@
     import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
     import com.tec.comm.NuevoConductor;
+    import com.tec.entities.Estudiante;
 
     import java.io.IOException;
 
 
     public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
-
-        private final String registrarConductorURL = "http://localhost:8080/registro-conductor";
-
         private GoogleMap mMap;
         GoogleApiClient googleApiClient;
         Location lastLocation;
@@ -45,6 +43,9 @@
         SupportMapFragment mapFragment;
         static Marker carmarker;
         Marker ubicacion;
+        Estudiante estudiante;
+        Marker markerEstudiante;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -72,6 +73,11 @@
 
             final LatLng  lalg = new LatLng(9.857191, -83.912284);
             Marker TEC = mMap.addMarker(new MarkerOptions().position(lalg).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
+
+            mMap.setMyLocationEnabled(false);
+           // LatLng locationChofer = new LatLng(estudiante.getPosicionHogar().getLat(), estudiante.getPosicionHogar().getLon()); //cambiar por la ruta no pos HOGAR
+           // markerEstudiante = mMap.addMarker(new MarkerOptions().position(locationChofer).title("Ride").icon(BitmapDescriptorFactory.fromResource(R.drawable.student)));
+
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
