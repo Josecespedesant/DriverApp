@@ -65,7 +65,6 @@
                 @Override
                 public void onMapClick(LatLng latLng) {
                     if(ubicacion==null) {
-                        mMap.clear();
                         ubicacion = mMap.addMarker(new MarkerOptions().position(latLng).title("carro").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_left)));
 
                         Double lat = ubicacion.getPosition().latitude;
