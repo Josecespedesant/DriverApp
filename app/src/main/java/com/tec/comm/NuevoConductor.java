@@ -1,5 +1,8 @@
 package com.tec.comm;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -7,6 +10,9 @@ import com.google.gson.JsonParser;
 import com.tec.entities.Conductor;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,11 +27,14 @@ public class NuevoConductor {
     OkHttpClient client = new OkHttpClient();
 
     String url = "http://192.168.100.7:8080/registro-conductor";
+    String path = "/home/david/Documents/DriverApp/archivos/respuestaInicio.txt";
+
 
     Gson gson = new Gson();
 
     boolean registroExitoso;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean registrar(Conductor conductor) throws IOException {
         registroExitoso = false;
         String json = gson.toJson(conductor);
@@ -58,9 +67,12 @@ public class NuevoConductor {
                     myResponse = gson.toJson(myResponse);
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
                     registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
+                    PrintWriter out = new PrintWriter(path);
                 }
             }
         });
+        String text = new String(Files.readAllBytes(Paths.get(this.path)));
+        registroExitoso = Boolean.valueOf(text);
         return registroExitoso;
     }
 }
