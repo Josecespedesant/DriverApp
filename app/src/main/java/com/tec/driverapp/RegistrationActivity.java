@@ -17,11 +17,13 @@ import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
+import com.tec.comm.NuevoConductor;
 import com.tec.entities.Conductor;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,7 +83,13 @@ public class RegistrationActivity extends AppCompatActivity {
                     MainActivity.contraseñalogin.setText(pass.getText().toString());
                     //getManualRegistrationInfo();
                     nuevoconductor = new Conductor(resultnombre, resultpass, resultcarnet, 0, 0);
-                    finish();
+                    NuevoConductor condARegistrar = new NuevoConductor();
+                    try {
+                        condARegistrar.registrar(nuevoconductor);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //finish();
                 }else{
                     Toast.makeText(getApplicationContext(),"Ingresar todos los datos",Toast.LENGTH_SHORT).show();
 

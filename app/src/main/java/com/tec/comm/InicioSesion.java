@@ -19,13 +19,13 @@ public class InicioSesion {
 
     OkHttpClient client = new OkHttpClient();
 
-    String url = "http://192.168.100.7:8080/inicio-conductor";
+    String url = "http://192.168.100.7:8080/ingreso-conductor";
 
     Gson gson = new Gson();
 
-    public boolean inicio(Conductor conductor) {
-        boolean inicioExito = false;
+    boolean inicioExito = false;
 
+    public boolean inicio(Conductor conductor) {
         String json = gson.toJson(conductor);
         final JsonParser jsonParser = new JsonParser();
         final JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
@@ -54,10 +54,12 @@ public class InicioSesion {
                     String myResponse = response.body().string();
                     myResponse = gson.toJson(myResponse);
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
+                    inicioExito = true;
                     // registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
                 }
             }
         });
-        return true;
+        System.out.println(inicioExito);
+        return inicioExito;
     }
 }

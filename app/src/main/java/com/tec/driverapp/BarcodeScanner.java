@@ -52,7 +52,7 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
                 if(grantResults.length > 0){
                     boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if(cameraAccepted){
-                        Toast.makeText(BarcodeScanner.this, "Permiso ak7",Toast.LENGTH_LONG).show();
+                        Toast.makeText(BarcodeScanner.this, "Permiso autorizado",Toast.LENGTH_LONG).show();
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                             if(shouldShowRequestPermissionRationale(CAMERA)){
                                 displayAlertMessage("Allow access",

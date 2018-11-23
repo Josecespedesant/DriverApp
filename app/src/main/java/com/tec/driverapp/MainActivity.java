@@ -28,7 +28,9 @@
         import com.linkedin.platform.listeners.ApiResponse;
         import com.linkedin.platform.listeners.AuthListener;
         import com.linkedin.platform.utils.Scope;
+        import com.tec.comm.InicioSesion;
         import com.tec.entities.Conductor;
+        import com.tec.entities.Estudiante;
 
         import org.json.JSONObject;
 
@@ -42,6 +44,7 @@
             static TextView carnet;
             static EditText contraseñalogin;
             static String nombre = null;
+            InicioSesion login = new InicioSesion();
 
             static Conductor conductor;
 
@@ -55,17 +58,22 @@
                 final TextView registrate = (TextView) findViewById(R.id.registrate);
                 final ImageView linkedin = (ImageView) findViewById(R.id.linkedimg);
                 final RelativeLayout iniciarsesion = (RelativeLayout) findViewById(R.id.iniciarsesion);
+
                 iniciarsesion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        if (carnet.getText().toString().equals(RegistrationActivity.carnet.getText().toString()) && contraseñalogin.getText().toString().equals(RegistrationActivity.resultpass)) {
-                            Toast.makeText(getApplicationContext(), "Bienvenido: " + RegistrationActivity.resultnombre, Toast.LENGTH_SHORT).show();
-
-                            Dialog dialo = alertDialog();
-                            dialo.show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Carnet o contraseña invalida", Toast.LENGTH_SHORT).show();
+                        if(!carnet.getText().toString().isEmpty()&&!contraseñalogin.getText().toString().isEmpty()){
+                            Conductor conductorlog = new Conductor(null, contraseñalogin.getText().toString(),carnet.getText().toString(),0,0);
+                            if(login.inicio(conductorlog)){
+                                Toast.makeText(getApplicationContext(), "Bienvenido: " + RegistrationActivity.resultnombre, Toast.LENGTH_SHORT).show();
+                                Dialog dialo = alertDialog();
+                                dialo.show();
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Usuario o contraseña inválido", Toast.LENGTH_SHORT).show();
+                            }
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Ingresar todos los datos", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -89,7 +97,7 @@
                     @Override
                     public void onClick(View v) {
                         Intent barcode = new Intent(MainActivity.this, BarcodeScanner.class);
-                        MainActivity.this.startActivity(barcode);
+                        startActivityForResult(barcode, 1);
                     }
                 });
             }
@@ -121,8 +129,8 @@
                         String resultado = data.getStringExtra("resultado");
                         carnet.setText(resultado);
                         Toast.makeText(getApplicationContext(), "Su carnet es: " + resultado, Toast.LENGTH_SHORT).show();
-                        Dialog dialo = alertDialog();
-                        dialo.show();
+                        //Dialog dialo = alertDialog();
+                        //dialo.show();
                     }
                 }
                 LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
