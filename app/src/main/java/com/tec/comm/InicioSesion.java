@@ -1,5 +1,8 @@
 package com.tec.comm;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -25,10 +28,10 @@ public class InicioSesion {
 
     Gson gson = new Gson();
 
-    final boolean[] inicioExito = new boolean[1];
+    boolean inicioExito;
 
     public boolean inicio(Conductor conductor) {
-        inicioExito[0] = false;
+        inicioExito = false;
         String json = gson.toJson(conductor);
         final JsonParser jsonParser = new JsonParser();
         final JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
@@ -56,13 +59,30 @@ public class InicioSesion {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String myResponse = response.body().string();
+                    myResponse = gson.toJson(myResponse);
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
-                    inicioExito[0] = json.getAsJsonPrimitive("exitoso").getAsBoolean();
-                    // registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
+                    inicioExito = json.getAsJsonPrimitive("exitoso").getAsBoolean();
+
+                    if (inicioExito) {
+                        // Run view-related code back on the main thread
+                        new Handler(Looper.getMainLooper()).post(new Runnable () {
+                            @Override
+                            public void run () {
+                                inicioExito = true;
+                            }
+                        });
+                    }
+                    else {
+                        new Handler(Looper.getMainLooper()).post(new Runnable () {
+                            @Override
+                            public void run () {
+                                inicioExito = false;
+                            }
+                        });
+                    }
                 }
             }
         });
-        System.out.println(inicioExito[0]);
-        return inicioExito[0];
+        return inicioExito;
     }
 }

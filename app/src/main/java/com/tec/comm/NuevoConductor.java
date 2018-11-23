@@ -1,12 +1,17 @@
 package com.tec.comm;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.tec.driverapp.MainActivity;
+import com.tec.driverapp.R;
 import com.tec.entities.Conductor;
 
 import java.io.IOException;
@@ -67,12 +72,27 @@ public class NuevoConductor {
                     myResponse = gson.toJson(myResponse);
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
                     registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
-                    PrintWriter out = new PrintWriter(path);
+
+                    if (registroExitoso) {
+                        // Run view-related code back on the main thread
+                        new Handler(Looper.getMainLooper()).post(new Runnable () {
+                            @Override
+                            public void run () {
+                                registroExitoso = true;
+                            }
+                        });
+                    }
+                    else {
+                        new Handler(Looper.getMainLooper()).post(new Runnable () {
+                            @Override
+                            public void run () {
+                                registroExitoso = false;
+                            }
+                        });
+                    }
                 }
             }
         });
-        String text = new String(Files.readAllBytes(Paths.get(this.path)));
-        registroExitoso = Boolean.valueOf(text);
         return registroExitoso;
     }
 }
