@@ -66,6 +66,7 @@
                         if(!carnet.getText().toString().isEmpty()&&!contraseñalogin.getText().toString().isEmpty()){
                             Conductor conductorlog = new Conductor(null, contraseñalogin.getText().toString(),carnet.getText().toString(),0,0);
                             if(login.inicio(conductorlog)){
+                                System.out.println("Entro");
                                 Toast.makeText(getApplicationContext(), "Bienvenido: " + RegistrationActivity.resultnombre, Toast.LENGTH_SHORT).show();
                                 Dialog dialo = alertDialog();
                                 dialo.show();

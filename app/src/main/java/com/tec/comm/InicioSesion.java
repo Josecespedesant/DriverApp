@@ -6,6 +6,8 @@ import com.google.gson.JsonParser;
 import com.tec.entities.Conductor;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -23,9 +25,10 @@ public class InicioSesion {
 
     Gson gson = new Gson();
 
-    boolean inicioExito = false;
+    final boolean[] inicioExito = new boolean[1];
 
     public boolean inicio(Conductor conductor) {
+        inicioExito[0] = false;
         String json = gson.toJson(conductor);
         final JsonParser jsonParser = new JsonParser();
         final JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
@@ -43,6 +46,7 @@ public class InicioSesion {
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
+
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -53,12 +57,12 @@ public class InicioSesion {
                 if (response.isSuccessful()) {
                     String myResponse = response.body().string();
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
-                    inicioExito = json.getAsJsonPrimitive("exitoso").getAsBoolean();
+                    inicioExito[0] = json.getAsJsonPrimitive("exitoso").getAsBoolean();
                     // registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
                 }
             }
         });
-        System.out.println(inicioExito);
-        return inicioExito;
+        System.out.println(inicioExito[0]);
+        return inicioExito[0];
     }
 }

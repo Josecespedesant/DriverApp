@@ -24,9 +24,10 @@ public class NuevoConductor {
 
     Gson gson = new Gson();
 
-    public boolean registrar(Conductor conductor) throws IOException {
-        boolean registroExitoso;
+    boolean registroExitoso;
 
+    public boolean registrar(Conductor conductor) throws IOException {
+        registroExitoso = false;
         String json = gson.toJson(conductor);
         final JsonParser jsonParser = new JsonParser();
         final JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
@@ -56,10 +57,10 @@ public class NuevoConductor {
                     String myResponse = response.body().string();
                     myResponse = gson.toJson(myResponse);
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
-                    // registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
+                    registroExitoso = json.getAsJsonPrimitive("exitoso").getAsBoolean();
                 }
             }
         });
-        return true;
+        return registroExitoso;
     }
 }
