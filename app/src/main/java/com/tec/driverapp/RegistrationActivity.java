@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Clase para registrarse en el sistema
+ */
 public class RegistrationActivity extends AppCompatActivity {
     static TextView carnet;
     EditText nombre;

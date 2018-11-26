@@ -32,10 +32,19 @@
     import com.google.android.gms.maps.model.MarkerOptions;
     import com.tec.comm.NuevoConductor;
     import com.tec.entities.Estudiante;
+    import com.tec.graph.DijkstraAlgorithm;
+    import com.tec.graph.Edge;
+    import com.tec.graph.Graph;
+    import com.tec.graph.Vertex;
 
     import java.io.IOException;
+    import java.util.LinkedList;
+    import java.util.List;
+    import java.util.Random;
 
-
+    /**
+     * Mapa desplegado para el conductor
+     */
     public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
         private GoogleMap mMap;
         GoogleApiClient googleApiClient;
@@ -47,6 +56,7 @@
         Estudiante estudiante;
         Marker markerEstudiante;
         static Boolean vasolo=true;
+        Graph g = new Graph(null,null);
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +83,18 @@
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(false);
 
+
+
+            g.generateThirtyRandomPlaces();
+
+            List<Vertex> puntos = g.getVertexes();
+
+            for(int i = 0; i < puntos.size()-1;i++){
+                LatLng latLng = new LatLng(puntos.get(i).getLat(),puntos.get(i).getLon());
+                Marker auxMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(puntos.get(i).getName()));
+            }
+
+
             final LatLng  posTEC = new LatLng(9.857191, -83.912284);
             Marker TEC = mMap.addMarker(new MarkerOptions().position(posTEC).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
 
@@ -98,6 +120,11 @@
                         Double lat = ubicacion.getPosition().latitude;
                         Double lon = ubicacion.getPosition().longitude;
 
+                        Vertex conductr = new Vertex("Node_0", "Node_0", lat, lon);
+                        g.getVertexes().add(0, conductr);
+                        Edge arista = new Edge("Lane_0", g.getVertexes().get(0), g.getVertexes().get(1), 1);
+                        g.getEdges().add(0, arista);
+
                         if(RegistrationActivity.nuevoconductor != null){
                             RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
 
@@ -118,13 +145,30 @@
                                 e.printStackTrace();
                             }*/
                         }
+                        if(!g.getVertexes().isEmpty()) {
+                            DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(g);
+                            dijkstraAlgorithm.execute(g.getVertexes().get(0));
+                            LinkedList<Vertex> path = dijkstraAlgorithm.getPath(g.getVertexes().get(30));
+
+                            for (int j = 0; j < path.size(); j++) {
+                                LatLng dest = new LatLng(path.getLast().getLat(), path.getLast().getLon());
+                                Random randint = new Random();
+                                boolean llego = false;
+                                while(!llego) {
+                                    animateMarker(ubicacion, dest, false, randint.nextInt((10 - 1) + 1) + 1);
+                                    llego = true;
+                                }
+                            }
+                        }
+
+
+
 
                         //Verificar
                         //LatLng posEstu = new LatLng(estudiante.getPosLatitud(), estudiante.getPosLongitud());
                         //if(estudiante.isNecesitaViaje()){
                             //animateMarker(ubicacion, posEstu, false);
                             //markerEstudiante.remove();
-                            animateMarker(ubicacion, posTEC, false, 10);
                         //}else{
                         //    animateMarker(ubicacion, posTEC, false);
                         //}

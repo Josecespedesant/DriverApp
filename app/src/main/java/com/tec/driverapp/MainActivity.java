@@ -8,7 +8,9 @@
         import android.content.pm.PackageInfo;
         import android.content.pm.PackageManager;
         import android.content.pm.Signature;
+        import android.os.Build;
         import android.support.annotation.Nullable;
+        import android.support.annotation.RequiresApi;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Base64;
@@ -34,10 +36,13 @@
 
         import org.json.JSONObject;
 
+        import java.io.IOException;
         import java.security.MessageDigest;
         import java.security.NoSuchAlgorithmException;
 
-
+        /**
+         * Actividad principal donde se accede al registro y/o al inicio de sesión
+         */
         public class MainActivity extends AppCompatActivity {
             private static final String TAG = "MainActivity";
             String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name)";
@@ -45,7 +50,6 @@
             static EditText contraseñalogin;
             static String nombre = null;
             InicioSesion login = new InicioSesion();
-
             static Conductor conductor;
 
             @Override
@@ -60,6 +64,7 @@
                 final RelativeLayout iniciarsesion = (RelativeLayout) findViewById(R.id.iniciarsesion);
 
                 iniciarsesion.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
 
@@ -130,8 +135,8 @@
                         String resultado = data.getStringExtra("resultado");
                         carnet.setText(resultado);
                         Toast.makeText(getApplicationContext(), "Su carnet es: " + resultado, Toast.LENGTH_SHORT).show();
-                        //Dialog dialo = alertDialog();
-                        //dialo.show();
+                        Dialog dialo = alertDialog();
+                        dialo.show();
                     }
                 }
                 LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
@@ -155,7 +160,7 @@
 
             public Dialog alertDialog() {
                 AlertDialog.Builder mbuilder = new AlertDialog.Builder(MainActivity.this);
-                mbuilder.setMessage("Continuar solo?")
+                mbuilder.setMessage("¿Continuar solo?")
                         .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent mapintent = new Intent(MainActivity.this, DriverMapActivity.class);
@@ -180,6 +185,7 @@
                     Toast.makeText(getApplicationContext(), "Bienvenido " + jsonObject.get("firstName").toString() + " " + jsonObject.get("lastName").toString(), Toast.LENGTH_SHORT).show();
                     nombre = jsonObject.get("firstName").toString() + " " + jsonObject.get("lastName");
                     conductor = new Conductor(nombre, null, carnet.getText().toString(), 0, 0);
+
 
                 } catch (Exception e) {
                     e.printStackTrace();

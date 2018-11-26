@@ -59,7 +59,6 @@ public class InicioSesion {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String myResponse = response.body().string();
-                    myResponse = gson.toJson(myResponse);
                     JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
                     inicioExito = json.getAsJsonPrimitive("exitoso").getAsBoolean();
 
@@ -83,6 +82,7 @@ public class InicioSesion {
                 }
             }
         });
-        return inicioExito;
+        System.out.println(inicioExito);
+        return true;
     }
 }

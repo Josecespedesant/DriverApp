@@ -18,6 +18,9 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
 
+/**
+ * Escáner de código de barra
+ */
 public class BarcodeScanner extends AppCompatActivity implements ZXingScannerView.ResultHandler{
 
     private static final int RESQUEST_CAMERA = 1;

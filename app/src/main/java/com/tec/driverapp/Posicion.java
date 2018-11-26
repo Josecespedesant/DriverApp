@@ -1,5 +1,8 @@
 package com.tec.driverapp;
 
+/**
+ * Clase utilizada para manejar la posición de los marcadores
+ */
 public class Posicion {
     private double lat;
     private double lon;
