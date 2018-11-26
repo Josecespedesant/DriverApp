@@ -58,6 +58,9 @@
         static Boolean vasolo=true;
         Graph g = new Graph(null,null);
 
+        static double globalLatitude;
+        static double globalLongitude;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -96,7 +99,7 @@
 
 
             final LatLng  posTEC = new LatLng(9.857191, -83.912284);
-            Marker TEC = mMap.addMarker(new MarkerOptions().position(posTEC).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
+            final Marker TEC = mMap.addMarker(new MarkerOptions().position(posTEC).title("TEC").icon(BitmapDescriptorFactory.fromResource(R.drawable.tec)));
 
             mMap.setMyLocationEnabled(false);
 
@@ -125,6 +128,7 @@
                         Edge arista = new Edge("Lane_0", g.getVertexes().get(0), g.getVertexes().get(1), 1);
                         g.getEdges().add(0, arista);
 
+
                         if(RegistrationActivity.nuevoconductor != null){
                             RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
 
@@ -150,15 +154,24 @@
                             dijkstraAlgorithm.execute(g.getVertexes().get(0));
                             LinkedList<Vertex> path = dijkstraAlgorithm.getPath(g.getVertexes().get(30));
 
-                            for (int j = 0; j < path.size(); j++) {
-                                LatLng dest = new LatLng(path.getLast().getLat(), path.getLast().getLon());
-                                Random randint = new Random();
-                                boolean llego = false;
-                                while(!llego) {
-                                    animateMarker(ubicacion, dest, false, randint.nextInt((10 - 1) + 1) + 1);
-                                    llego = true;
-                                }
+                            LatLng posCond = new LatLng(path.get(0).getLat(),path.get(0).getLon());
+                            ubicacion.setPosition(posCond);
+
+                            //ANIMACIÓN DEBERÍA OCURRIR AQUÍ
+
+                            for(int j = 1; j<path.size(); j++){
+                                LatLng posDest = new LatLng(path.get(j).getLat(),path.get(j).getLon());
+                                animateMarker(ubicacion, posDest, false, 5);
                             }
+
+
+                            /*
+                            for(int j = 1; j<path.size();j++){
+                                LatLng posDest = new LatLng(path.get(j).getLat(),path.get(j).getLon());
+                                animateMarker(ubicacion, posDest, false, 5);
+                            }
+
+                            animateMarker(ubicacion, posTEC, false, 5)*/
                         }
 
 
@@ -200,6 +213,7 @@
                 @Override
                 public void run() {
 
+
                     long elapsed = SystemClock.uptimeMillis() - start;
                     float t = interpolator.getInterpolation((float) elapsed
                             / duration);
@@ -207,6 +221,7 @@
                             * startLatLng.longitude;
                     double lat = t * toPosition.latitude + (1 - t)
                             * startLatLng.latitude;
+
                     marker.setPosition(new LatLng(lat, lng));
 
                     if (t < 1.0) {
@@ -221,6 +236,7 @@
                     }
                 }
             });
+
         }
 
         protected synchronized void buildGoogleApiClient(){
