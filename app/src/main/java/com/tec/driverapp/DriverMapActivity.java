@@ -30,7 +30,6 @@
     import com.google.android.gms.maps.model.LatLng;
     import com.google.android.gms.maps.model.Marker;
     import com.google.android.gms.maps.model.MarkerOptions;
-    import com.tec.comm.NuevoConductor;
     import com.tec.entities.Estudiante;
     import com.tec.graph.DijkstraAlgorithm;
     import com.tec.graph.Edge;
@@ -128,28 +127,9 @@
                         Edge arista = new Edge("Lane_0", g.getVertexes().get(0), g.getVertexes().get(1), 1);
                         g.getEdges().add(0, arista);
 
-
-                        if(RegistrationActivity.nuevoconductor != null){
-                            RegistrationActivity.nuevoconductor.setPosicionHogar(new Posicion(lat, lon));
-
-                            NuevoConductor test = new NuevoConductor();
-                            /*try {
-                                test.registrar(RegistrationActivity.nuevoconductor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }*/
-                        }
-                        if(MainActivity.conductor!= null){
-                            MainActivity.conductor.setPosicionHogar(new Posicion(lat, lon));
-
-                            NuevoConductor test = new NuevoConductor();
-                            /*try {
-                                test.registrar(RegistrationActivity.nuevoconductor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }*/
-                        }
                         if(!g.getVertexes().isEmpty()) {
+                            Random rand = new Random();
+                            int randomTime = rand.nextInt((10 - 1) + 1) + 1;
                             DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(g);
                             dijkstraAlgorithm.execute(g.getVertexes().get(0));
                             LinkedList<Vertex> path = dijkstraAlgorithm.getPath(g.getVertexes().get(30));
@@ -161,7 +141,7 @@
                             //ANIMACIÓN DEBERÍA OCURRIR AQUÍ
 
                             LatLng posDest = new LatLng(path.get(1).getLat(),path.get(1).getLon());
-                            animateMarker(ubicacion, posDest, false, 5);
+                            animateMarker(ubicacion, posDest, false, randomTime);
 
                         }
 
@@ -183,6 +163,8 @@
                     }else{
                         //ANIMACIÓN DEBERÍA CONTINUAR OCURRIR AQUÍ
                         if(!g.getVertexes().isEmpty()) {
+                            Random rand = new Random();
+                            int randomTime = rand.nextInt((10 - 1) + 1) + 1;
                             DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(g);
                             dijkstraAlgorithm.execute(g.getVertexes().get(0));
                             LinkedList<Vertex> path = dijkstraAlgorithm.getPath(g.getVertexes().get(30));
@@ -192,7 +174,7 @@
 
                             for (int j = cont+1; j < path.size(); j++) {
                                 LatLng posDest = new LatLng(path.get(j).getLat(), path.get(j).getLon());
-                                animateMarker(ubicacion, posDest, false, 5);
+                                animateMarker(ubicacion, posDest, false, randomTime);
                                 cont++;
                                 return;
                             }

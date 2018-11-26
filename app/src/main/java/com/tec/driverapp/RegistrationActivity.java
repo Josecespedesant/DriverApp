@@ -22,7 +22,6 @@ import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
-import com.tec.comm.NuevoConductor;
 import com.tec.entities.Conductor;
 
 import org.json.JSONObject;
@@ -60,7 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     Gson gson = new Gson();
     OkHttpClient client = new OkHttpClient();
-    String urlInicioSesion = "http://192.168.100.7:8080/registro-conductor";
+    String urlInicioSesion = "http://172.18.210.63:8080/registro-conductor";
 
 
     @Override

@@ -33,7 +33,6 @@ import com.linkedin.platform.listeners.ApiListener;
 import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
-import com.tec.comm.InicioSesion;
 import com.tec.entities.Conductor;
 import com.tec.entities.Estudiante;
 
@@ -60,11 +59,10 @@ public class MainActivity extends AppCompatActivity {
     static TextView carnet;
     static EditText contraseñalogin;
     static String nombre = null;
-    InicioSesion login = new InicioSesion();
     static Conductor conductor;
     Gson gson = new Gson();
     OkHttpClient client = new OkHttpClient();
-    String urlInicioSesion = "http://192.168.100.7:8080/ingreso-conductor";
+    String urlInicioSesion = "http://172.18.210.63:8080/ingreso-conductor";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
