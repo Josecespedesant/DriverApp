@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 if(!carnet.getText().toString().isEmpty()&&!contraseñalogin.getText().toString().isEmpty()){
                     Conductor conductorlog = new Conductor(null, contraseñalogin.getText().toString(),carnet.getText().toString(),0,0);
                     inicioSesion(conductorlog);
-
-                    inicioSesion(conductorlog);
                 }else {
                     Toast.makeText(getApplicationContext(), "Ingresar todos los datos", Toast.LENGTH_SHORT).show();
                 }

@@ -2,7 +2,9 @@ package com.tec.driverapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.errors.LIApiError;
 import com.linkedin.platform.listeners.ApiListener;
@@ -26,6 +31,14 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Clase para registrarse en el sistema
@@ -42,8 +55,13 @@ public class RegistrationActivity extends AppCompatActivity {
     static String resultpass = "";
     boolean flag = false;
     RelativeLayout register;
-
     static Conductor nuevoconductor = null;
+
+
+    Gson gson = new Gson();
+    OkHttpClient client = new OkHttpClient();
+    String urlInicioSesion = "http://192.168.100.7:8080/registro-conductor";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +93,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         register.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if(!carnet.getText().toString().isEmpty()&&!nombre.getText().toString().isEmpty()&&!pass.getText().toString().isEmpty()) {
@@ -86,13 +105,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     MainActivity.contraseñalogin.setText(pass.getText().toString());
                     //getManualRegistrationInfo();
                     nuevoconductor = new Conductor(resultnombre, resultpass, resultcarnet, 0, 0);
-                    NuevoConductor condARegistrar = new NuevoConductor();
-                    try {
-                        condARegistrar.registrar(nuevoconductor);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //finish();
+                    registro(nuevoconductor);
                 }else{
                     Toast.makeText(getApplicationContext(),"Ingresar todos los datos",Toast.LENGTH_SHORT).show();
 
@@ -122,5 +135,64 @@ public class RegistrationActivity extends AppCompatActivity {
                 carnet.setText(resultado);
             }
         }
+    }
+
+    public void registro(Conductor conductor) {
+        String json = gson.toJson(conductor);
+        final JsonParser jsonParser = new JsonParser();
+        final JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
+        jsonObject.remove("amigos");
+        json = jsonObject.toString();
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("json", json)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(this.urlInicioSesion)
+                .addHeader("Content-Type", "text/plain")
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String myResponse = response.body().string();
+                    JsonObject json = jsonParser.parse(myResponse).getAsJsonObject();
+                    boolean exito = json.getAsJsonPrimitive("exitoso").getAsBoolean();
+
+                    if (exito) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegistrationActivity.this, "Bienvenido!",
+                                        Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegistrationActivity.this,
+                                        DriverMapActivity.class);
+                                RegistrationActivity.this.startActivity(intent);
+                            }
+                        });
+
+                    }
+                    else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(RegistrationActivity.this,
+                                        "Información inválida o usuario ya existe", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                }
+            }
+        });
     }
 }
