@@ -57,7 +57,7 @@
         Marker markerEstudiante;
         static Boolean vasolo=true;
         Graph g = new Graph(null,null);
-
+        int cont =1;
         static double globalLatitude;
         static double globalLongitude;
 
@@ -157,21 +157,12 @@
                             LatLng posCond = new LatLng(path.get(0).getLat(),path.get(0).getLon());
                             ubicacion.setPosition(posCond);
 
+
                             //ANIMACIÓN DEBERÍA OCURRIR AQUÍ
 
-                            for(int j = 1; j<path.size(); j++){
-                                LatLng posDest = new LatLng(path.get(j).getLat(),path.get(j).getLon());
-                                animateMarker(ubicacion, posDest, false, 5);
-                            }
+                            LatLng posDest = new LatLng(path.get(1).getLat(),path.get(1).getLon());
+                            animateMarker(ubicacion, posDest, false, 5);
 
-
-                            /*
-                            for(int j = 1; j<path.size();j++){
-                                LatLng posDest = new LatLng(path.get(j).getLat(),path.get(j).getLon());
-                                animateMarker(ubicacion, posDest, false, 5);
-                            }
-
-                            animateMarker(ubicacion, posTEC, false, 5)*/
                         }
 
 
@@ -189,10 +180,28 @@
 
 
 
+                    }else{
+                        //ANIMACIÓN DEBERÍA CONTINUAR OCURRIR AQUÍ
+                        if(!g.getVertexes().isEmpty()) {
+                            DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(g);
+                            dijkstraAlgorithm.execute(g.getVertexes().get(0));
+                            LinkedList<Vertex> path = dijkstraAlgorithm.getPath(g.getVertexes().get(30));
+
+                            LatLng posCond = new LatLng(path.get(cont).getLat(), path.get(cont).getLon());
+                            ubicacion.setPosition(posCond);
+
+                            for (int j = cont+1; j < path.size(); j++) {
+                                LatLng posDest = new LatLng(path.get(j).getLat(), path.get(j).getLon());
+                                animateMarker(ubicacion, posDest, false, 5);
+                                cont++;
+                                return;
+                            }
+                        }
                     }
                 }
             });
         }
+
 
         public void animateMarker(final Marker marker, final LatLng toPosition,
                                   final boolean hideMarker, int dist) {
